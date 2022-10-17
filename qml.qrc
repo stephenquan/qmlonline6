@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/MyApp.qml</file>
+        <file>qml/MainPage.qml</file>
+        <file>qml/SharePage.qml</file>
+        <file>qml/Imports.qml</file>
+        <file>qml/AppIconButton.qml</file>
+        <file>qml/images/share-32.svg</file>
+        <file>qt5-qml-toolkit/CodeEdit.qml</file>
+        <file>qt5-qml-toolkit/RunView.qml</file>
+        <file>qml/images/handle-vertical-32.svg</file>
+        <file>qml/images/chevron-left-32.svg</file>
+    </qresource>
+</RCC>

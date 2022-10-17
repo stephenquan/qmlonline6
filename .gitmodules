@@ -1,0 +1,6 @@
+[submodule "qt5-qml-toolkit"]
+	path = qt5-qml-toolkit
+	url = https://github.com/stephenquan/qt5-qml-toolkit.git
+[submodule "qt-toolkit"]
+	path = qt-toolkit
+	url = https://github.com/stephenquan/qt-toolkit.git
