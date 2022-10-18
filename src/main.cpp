@@ -3,12 +3,16 @@
 #include <QQmlEngine>
 #include <QJSEngine>
 #include <QtGlobal>
+#include <QQmlContext>
 #include "../qt-toolkit/App.h"
 #include "../qt-toolkit/Engine.h"
 #include "../qt-toolkit/FileSystem.h"
 #include "../qt-toolkit/Folder.h"
 #include "../qt-toolkit/SyntaxHighlighter.h"
 #include "../qt-toolkit/System.h"
+
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +39,15 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    QQmlContext* rootContext = engine.rootContext();
+    rootContext->setContextProperty("BUILD_DATE", __DATE__);
+    rootContext->setContextProperty("BUILD_TIME", __TIME__);
+#ifdef GIT_COMMIT
+    rootContext->setContextProperty("GIT_COMMIT", STR(GIT_COMMIT));
+#else
+    rootContext->setContextProperty("GIT_COMMIT", "");
+#endif
+
     const QUrl url(QStringLiteral("qrc:/qml/MyApp.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

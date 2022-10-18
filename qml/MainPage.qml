@@ -26,11 +26,7 @@ Page {
             width: parent.width
             Text {
                 Layout.fillWidth: true
-                text: title
-                color: "snow"
-            }
-            Text {
-                text: System.qtVersion
+                text: app.title
                 color: "snow"
             }
             AppIconButton {
@@ -74,8 +70,13 @@ Page {
         MenuItem {
             icon.source: "images/share-32.svg"
             text: qsTr("Share")
-            //enabled: Qt.platform.os === "wasm"
+            enabled: Qt.platform.os === "wasm"
             onTriggered: share()
+        }
+        MenuItem {
+            icon.source: "images/information-32.svg"
+            text: qsTr("About")
+            onTriggered: stackView.push("AboutPage.qml")
         }
     }
 
@@ -123,20 +124,27 @@ Page {
     }
 
     function share() {
-        let shareLink = App.href + "?code=" + encodeURIComponent(codeEdit.text);
-        let m = (App.href + "").match(/(.*)(code=)(.*)/);
+        //let shareLink = App.href + "?code=" + encodeURIComponent(codeEdit.text);
+        let shareLink = App.href + "?zcode=" + encodeURIComponent(Engine.stringCompress(codeEdit.text));
+        let m = (App.href + "").match(/(.*)(zcode|code)(=)(.*)/);
         if (m) {
-            shareLink = m[1] + m[2] + encodeURIComponent(codeEdit.text);
+            shareLink = m[1] + "code=" + encodeURIComponent(codeEdit.text);
         }
         stackView.push("SharePage.qml", { shareLink } );
     }
 
     Component.onCompleted: {
+        let code = "";
         let m = (App.href + "").match(/code=(.*)/);
         if (m) {
-            codeEdit.text = decodeURIComponent(m[1]);
-        } else {
-            codeEdit.text =
+            code = decodeURIComponent(m[1]);
+        }
+        m = (App.href + "").match(/zcode=(.*)/);
+        if (m) {
+            code = Engine.stringUncompress(decodeURIComponent(m[1]));
+        }
+        if (!code) {
+            code =
 `import QtQuick
 import QtQuick.Controls
 import QtQuick3D
@@ -177,5 +185,6 @@ Page {
 }
 `;
         }
+        codeEdit.text = code;
     }
 }

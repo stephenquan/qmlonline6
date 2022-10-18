@@ -17,6 +17,9 @@ rm -rf qt6-hello-app_autogen
 rm -rf qtloader.js
 rm -rf qtlogo.svg
 
+export GIT_COMMIT=$(git log -1 --format=%h)
+echo "GIT_COMMIT=${GIT_COMMIT}"
+
 mkdir -p out
 cd out
 ~/Documents/qtwasm640/qtbase/bin/qt-cmake ..

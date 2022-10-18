@@ -1,19 +1,19 @@
 import QtQuick 2.15
-//import QtQuick.Dialogs 1.2
-//import QtQuick.Extras 1.4
+import QtQuick.Dialogs 1.15
+import QtQuick.Extras 1.15
 import QtQuick.Layouts 1.15
 //import QtQuick.LocalStorage 2.15
-//import QtQuick.Particles 2.15
-//import QtQuick.Window 2.15
-//import QtQuick.XmlListModel 2.15
+import QtQuick.Particles 2.15
+import QtQuick.Window 2.15
+import QtQuick.XmlListModel 2.15
 import QtQuick.Shapes 1.15
 
-import QtQuick.Controls 2.2
-import QtQuick.Controls.Material 2.2
-import QtQuick.Controls.Universal 2.2
+import QtQuick.Controls 2.15
+import QtQuick.Controls.Material 2.15
+import QtQuick.Controls.Universal 2.15
 
 //import QtBluetooth 5.3
-//import QtCanvas3D 1.0
+import QtCanvas3D 1.0
 //import QtGraphicalEffects 1.0
 //import QtLocation 5.3
 //import QtMultimedia 5.0
@@ -23,7 +23,7 @@ import QtQuick.Controls.Universal 2.2
 //import QtWebView 1.1
 //import QtCharts 2.15
 import Qt.labs.platform 1.0
-//import QtAudioEngine 1.0
+import QtAudioEngine 1.0
 
 //import Qt5Compat.GraphicalEffects
 

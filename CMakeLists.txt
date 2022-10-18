@@ -54,6 +54,8 @@ else()
     endif()
 endif()
 
+target_compile_definitions(qmlonline6 PRIVATE GIT_COMMIT=${GIT_COMMIT})
+
 # /*
 # include_directories(util)
 #
