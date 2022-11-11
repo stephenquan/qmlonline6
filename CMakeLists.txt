@@ -18,16 +18,18 @@ set(PROJECT_SOURCES
     src/main.cpp
     qt-toolkit/App.cpp
     qt-toolkit/App.h
-	qt-toolkit/Engine.cpp
-	qt-toolkit/Engine.h
+    qt-toolkit/Engine.cpp
+    qt-toolkit/Engine.h
     qt-toolkit/FileSystem.cpp
     qt-toolkit/FileSystem.h
     qt-toolkit/Folder.cpp
     qt-toolkit/Folder.h
-	qt-toolkit/SyntaxHighlighter.cpp
-	qt-toolkit/SyntaxHighlighter.h
-	qt-toolkit/System.cpp
-	qt-toolkit/System.h
+    qt-toolkit/SyntaxHighlighter.cpp
+    qt-toolkit/SyntaxHighlighter.h
+    qt-toolkit/System.cpp
+    qt-toolkit/System.h
+    qt-toolkit/UrlInfo.cpp
+    qt-toolkit/UrlInfo.h
     qml.qrc
 )
 

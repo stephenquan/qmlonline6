@@ -63,6 +63,20 @@ Page {
         }
     }
 
+    footer: Frame {
+        background: Rectangle { color: "#eee" }
+
+        RowLayout {
+            width: parent.width
+
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: qsTr("Built on %1 %2").arg(BUILD_DATE).arg(BUILD_TIME)
+                font.pointSize: 10
+            }
+        }
+    }
+
     Menu {
         id: menu
         x: parent.width - width
@@ -70,7 +84,7 @@ Page {
         MenuItem {
             icon.source: "images/share-32.svg"
             text: qsTr("Share")
-            enabled: Qt.platform.os === "wasm"
+            //enabled: Qt.platform.os === "wasm"
             onTriggered: share()
         }
         MenuItem {
@@ -88,12 +102,13 @@ Page {
         try {
             errorString = "";
             Engine.clearComponentCache();
+            Engine.trimComponentCache();
             let mainFile = "";
             let mainText = "";
             let sourceFile = mainFile;
             let sourceText = "";
             for (let line of codeEdit.text.split(/\r?\n/)) {
-                let m = line.match(/^\/\/\s*([\w_.-]+\.\w{3})$/);
+                let m = line.match(/^\/\/\s*([\w_.-]+\.\w{3}|qmldir)$/);
                 if (m) {
                     if (sourceFile) {
                         FileSystem.tempFolder.writeTextFile(sourceFile, sourceText);
@@ -125,12 +140,12 @@ Page {
 
     function share() {
         //let shareLink = App.href + "?code=" + encodeURIComponent(codeEdit.text);
-        let shareLink = App.href + "?zcode=" + encodeURIComponent(Engine.stringCompress(codeEdit.text));
-        let m = (App.href + "").match(/(.*)(zcode|code)(=)(.*)/);
-        if (m) {
-            shareLink = m[1] + "code=" + encodeURIComponent(codeEdit.text);
-        }
-        stackView.push("SharePage.qml", { shareLink } );
+        //let shareLink = App.href + "?zcode=" + encodeURIComponent(System.stringCompress(codeEdit.text));
+        //let m = (App.href + "").match(/(.*)(zcode|code)(=)(.*)/);
+        //if (m) {
+            //shareLink = m[1] + "zcode=" + encodeURIComponent(System.stringCompress(codeEdit.text));
+        //}
+        stackView.push("SharePage.qml", { href: App.href, code: codeEdit.text } );
     }
 
     Component.onCompleted: {
@@ -141,16 +156,17 @@ Page {
         }
         m = (App.href + "").match(/zcode=(.*)/);
         if (m) {
-            code = Engine.stringUncompress(decodeURIComponent(m[1]));
+            code = System.stringUncompress(decodeURIComponent(m[1]));
         }
         if (!code) {
             code =
 `import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import QtQuick3D
 Page {
     background: Rectangle { color: "#848895" }
-    Node{
+    Node {
         id: standAloneScene
         DirectionalLight { ambientColor: Qt.rgba(1.0, 1.0, 1.0, 1.0) }
         Node {

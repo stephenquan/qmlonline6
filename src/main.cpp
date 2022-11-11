@@ -4,12 +4,14 @@
 #include <QJSEngine>
 #include <QtGlobal>
 #include <QQmlContext>
+#include <QDebug>
 #include "../qt-toolkit/App.h"
 #include "../qt-toolkit/Engine.h"
 #include "../qt-toolkit/FileSystem.h"
 #include "../qt-toolkit/Folder.h"
 #include "../qt-toolkit/SyntaxHighlighter.h"
 #include "../qt-toolkit/System.h"
+#include "../qt-toolkit/UrlInfo.h"
 
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
@@ -32,6 +34,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Folder>("qmlonline", 1, 0, "Folder");
     qmlRegisterType<SyntaxHighlighter>("qmlonline", 1, 0, "SyntaxHighlighter");
+    qmlRegisterType<UrlInfo>("qmlonline", 1, 0, "UrlInfo");
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -56,5 +59,7 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    return app.exec();
+    int ret = app.exec();
+    qDebug() << Q_FUNC_INFO << "line: " << __LINE__ << "ret:" << ret;
+    return ret;
 }

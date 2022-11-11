@@ -8,9 +8,15 @@ cd ~/emsdk
 ./emsdk activate 3.1.14
 source emsdk_env.sh
 
-unpack_tarball() {
+clean_workdir() {
   if [ -d "${WORKDIR}" ]; then
     rm -rf "${WORKDIR}"
+  fi
+}
+
+unpack_tarball() {
+  if [ -d "${WORKDIR}" ]; then
+    return
   fi
   if [ ! -d "${WORKDIR}" ]; then
     mkdir -p "${WORKDIR}"
@@ -39,55 +45,58 @@ build_qtkit() {
   cmd+=( -t qtdeclarative )
   cmd+=( -t qtimageformats )
   cmd+=( -t qtsvg )
-  cmd+=( -t qtquickcontrols2 )
+  # cmd+=( -t qtquickcontrols2 )
   cmd+=( -t qtnetworkauth )
   cmd+=( -t qt3d )
   cmd+=( -t qtquick3d )
   cmd+=( -t qtmultimedia )
+  # cmd+=( -t qtcharts )
+  cmd+=( -t qtvirtualkeyboard )
+  cmd+=( -t qt5compat )
 
   # Failed
   # cmd+=( -t qtquickcontrols )
+  # cmd+=( -t qtgraphicaleffects )
 
   # TODO
-  # make module-qtnetworkauth
-  # make module-qtscxml
-  # make module-qtgraphicaleffects
-  # make module-qtmultimedia
-  # make module-qtcharts
-  # make module-qttranslations
-  # make module-qtmacextras
-  # make module-qtx11extras
-  # make module-qtandroidextras
-  # make module-qtserialport
-  # make module-qtserialbus
-  # make module-qtactiveqt
-  # make module-qtquicktimeline
-  # make module-qtlottie
-  # make module-qtremoteobjects
-  # make module-qtpurchasing
-  # make module-qtwebsockets
-  # make module-qtwebglplugin
-  # make module-qtwebchannel
-  # make module-qtgamepad
-  # make module-qtwayland
-  # make module-qtconnectivity
-  # make module-qtsensors
-  # make module-qtlocation
-  # make module-qtxmlpatterns
-  # make module-qtspeech
-  # make module-qtvirtualkeyboard
-  # make module-qtdatavis3d
-  # make module-qtwinextras
-  # make module-qttools
-  # make module-qtscript
-  # make module-qtwebengine
-  # make module-qtwebview
-  # make module-qtd
+  # cmd+=( -t qtnetworkauth )
+  # cmd+=( -t qtscxml )
+  # cmd+=( -t qtmultimedia )
+  # cmd+=( -t qttranslations )
+  # cmd+=( -t qtmacextras )
+  # cmd+=( -t qtx11extras )
+  # cmd+=( -t qtandroidextras )
+  # cmd+=( -t qtserialport )
+  # cmd+=( -t qtserialbus )
+  # cmd+=( -t qtactiveqt )
+  # cmd+=( -t qtquicktimeline )
+  # cmd+=( -t qtlottie )
+  # cmd+=( -t qtremoteobjects )
+  # cmd+=( -t qtpurchasing )
+  # cmd+=( -t qtwebsockets )
+  # cmd+=( -t qtwebglplugin )
+  # cmd+=( -t qtwebchannel )
+  # cmd+=( -t qtgamepad )
+  # cmd+=( -t qtwayland )
+  # cmd+=( -t qtconnectivity )
+  # cmd+=( -t qtsensors )
+  # cmd+=( -t qtlocation )
+  # cmd+=( -t qtxmlpatterns )
+  # cmd+=( -t qtspeech )
+  # cmd+=( -t qtdatavis3d )
+  # cmd+=( -t qtwinextras )
+  # cmd+=( -t qttools )
+  # cmd+=( -t qtscript )
+  # cmd+=( -t qtwebengine )
+  # cmd+=( -t qtwebview )
+  # cmd+=( -t qtd )
+  # cmd+=( -t qtpositioning )
 
   # Run
   "${cmd[@]}"
 }
 
+# clean_workdir
 unpack_tarball
 configure_qtkit
 build_qtkit
