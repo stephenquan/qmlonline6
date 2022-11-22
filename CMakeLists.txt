@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
     qt-toolkit/FileSystem.h
     qt-toolkit/Folder.cpp
     qt-toolkit/Folder.h
+    qt-toolkit/ImageBuffer.cpp
+    qt-toolkit/ImageBuffer.h
     qt-toolkit/SyntaxHighlighter.cpp
     qt-toolkit/SyntaxHighlighter.h
     qt-toolkit/System.cpp

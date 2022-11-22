@@ -9,6 +9,7 @@
 #include "../qt-toolkit/Engine.h"
 #include "../qt-toolkit/FileSystem.h"
 #include "../qt-toolkit/Folder.h"
+#include "../qt-toolkit/ImageBuffer.h"
 #include "../qt-toolkit/SyntaxHighlighter.h"
 #include "../qt-toolkit/System.h"
 #include "../qt-toolkit/UrlInfo.h"
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType<FileSystem>("qmlonline", 1, 0, "FileSystem", [](QQmlEngine*,QJSEngine*) -> QObject* { return new FileSystem(); } );
     qmlRegisterSingletonType<System>("qmlonline", 1, 0, "System", [](QQmlEngine*,QJSEngine*) -> QObject* { return new System(); } );
 
+    qmlRegisterType<ImageBuffer>("qmlonline", 1, 0, "ImageBuffer");
     qmlRegisterType<Folder>("qmlonline", 1, 0, "Folder");
     qmlRegisterType<SyntaxHighlighter>("qmlonline", 1, 0, "SyntaxHighlighter");
     qmlRegisterType<UrlInfo>("qmlonline", 1, 0, "UrlInfo");
