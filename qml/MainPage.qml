@@ -47,7 +47,7 @@ Page {
                 font.family: Qt.platform.os === "wasm"
                              ? "DejaVu Sans Mono"
                              : "Courier"
-                onTextChanged: Qt.callLater(compile)
+                onTextChanged: Qt.callLater(compile);
             }
             Frame {
                 Text {
@@ -87,6 +87,13 @@ Page {
             //enabled: Qt.platform.os === "wasm"
             onTriggered: share()
         }
+
+        MenuItem {
+            icon.source: "images/qt-code-32.svg"
+            text: qsTr("Indent Code")
+            onTriggered: indentCode()
+        }
+
         MenuItem {
             icon.source: "images/information-32.svg"
             text: qsTr("About")
@@ -138,6 +145,45 @@ Page {
         }
     }
 
+    function indentCode() {
+        let code = codeEdit.text;
+        let lines = [ ];
+        let indent = 0;
+        let backtick = false;
+        let inquote = null;
+        for (let line of code.split(/\n/)) {
+            let str = "";
+            let start = true;
+            let post = false;
+            let postindent = 0;
+            let skipindent = (!!inquote);
+            for (let ch of line) {
+                if (inquote) {
+                    str += ch;
+                    if (inquote !== ch) {
+                        continue;
+                    }
+                    inquote = null;
+                    continue;
+                }
+                if (start && ch.match(/[\s\t\r\n]/)) continue;
+                start = false;
+                if (ch.match(/['"`]/)) inquote = ch;
+                if (ch.match(/[{\[]/)) { postindent++; post = true }
+                if (ch.match(/[}\]]/)) {
+                    if (post) postindent--; else indent--;
+                }
+                str += ch;
+            }
+            if (!skipindent && indent) {
+                str = ' '.repeat(indent*4) + str;
+            }
+            lines.push(str);
+            indent += postindent;
+        }
+        codeEdit.text = lines.join('\n') + '\n';
+    }
+
     function share() {
         //let shareLink = App.href + "?code=" + encodeURIComponent(codeEdit.text);
         //let shareLink = App.href + "?zcode=" + encodeURIComponent(System.stringCompress(codeEdit.text));
@@ -172,7 +218,6 @@ Page {
         Node {
             id: node
             Model {
-                id: model
                 source: "#Cube"
                 materials: [
                     DefaultMaterial { diffuseColor: Qt.rgba(0.053, 0.130, 0.219, 0.75) }
@@ -181,8 +226,8 @@ Page {
         }
         OrthographicCamera {
             id: cameraOrthographicFront
-            eulerRotation { x: -45; y: 45 }
-            x: 600; y: 800; z: 600
+            lookAtNode: node
+            y: 800; z: 1000
         }
     }
     View3D {
@@ -191,7 +236,7 @@ Page {
         camera: cameraOrthographicFront
     }
     NumberAnimation {
-        target: model
+        target: node
         property: "eulerRotation.y"
         loops: Animation.Infinite
         running: true
