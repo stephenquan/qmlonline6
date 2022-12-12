@@ -2,6 +2,8 @@
 
 # pushd ~/emsdk
 # ./emsdk activate 3.1.14
+QTVER=6.4.1
+
 source ~/emsdk/emsdk_env.sh
 
 export EXPORTED_RUNTIME_METHODS=ccall,cwrap,UTF16ToString,stringToUTF16,specialHTMLTargets
@@ -22,6 +24,6 @@ echo "GIT_COMMIT=${GIT_COMMIT}"
 
 mkdir -p out
 cd out
-~/Documents/qtwasm640/qtbase/bin/qt-cmake ..
+~/Documents/qtwasm-${QTVER}/qtbase/bin/qt-cmake ..
 cmake --build .
 

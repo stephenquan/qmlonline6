@@ -1,8 +1,8 @@
 #!/bin/bash -xe
 
-QTVER=6.4.0
-TAR=~/Downloads/qt-everywhere-src-6.4.0.tar
-WORKDIR=~/Documents/qtwasm640
+QTVER=6.4.1
+TAR=~/Downloads/qt-everywhere-src-${QTVER}.tar
+WORKDIR=~/Documents/qtwasm-${QTVER}
 
 cd ~/emsdk
 ./emsdk activate 3.1.14
@@ -22,14 +22,15 @@ unpack_tarball() {
     mkdir -p "${WORKDIR}"
   fi
   tar -C "${WORKDIR}" -xf "${TAR}" --strip-components=1
+  rm -rf "${WORKDIR}/qtwebengine"
 }
 
 configure_qtkit() {
   cd "${WORKDIR}"
   cmd=()
   cmd+=( ./configure )
-  cmd+=( -qt-host-path ~/Qt6.4.0/6.4.0/gcc_64)
-  cmd+=( -xplatform    wasm-emscripten )
+  cmd+=( -qt-host-path ~/Qt${QTVER}/${QTVER}/gcc_64)
+  cmd+=( -platform     wasm-emscripten )
   cmd+=( -nomake       examples )
   cmd+=( -prefix       $PWD/qtbase  )
   "${cmd[@]}"
@@ -96,9 +97,16 @@ build_qtkit() {
   "${cmd[@]}"
 }
 
-# clean_workdir
+echo 1000 tests
+which cmake
+cmake --version
+echo 1001 clean_workdir
+clean_workdir
+echo 1002 unpack_tarball
 unpack_tarball
+echo 1003 configure_qtkit
 configure_qtkit
+echo 1004 build_qtkit
 build_qtkit
 
 cd "${WORKDIR}"
