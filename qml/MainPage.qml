@@ -114,35 +114,68 @@ Page {
             let mainText = "";
             let sourceFile = mainFile;
             let sourceText = "";
+            let sourceUrl = "";
+            let downloads = [ Promise.resolve ];
             for (let line of codeEdit.text.split(/\r?\n/)) {
-                let m = line.match(/^\/\/\s*([\w_.-]+\.\w{3}|qmldir)$/);
+                let rx = /^\/\/\s*(qmldir|[\w_.-]+\.\w{3,6})(?:\s*:\s*(\w+:\/\/[^\s]*))?\s*$/;
+                let m = line.match(rx);
                 if (m) {
                     if (sourceFile) {
-                        FileSystem.tempFolder.writeTextFile(sourceFile, sourceText);
+                        downloads.push(saveFile(sourceFile, sourceText, sourceUrl));
                         if (!mainFile) {
                             mainFile = sourceFile;
                             mainText = sourceText;
                         }
                     }
-                    sourceFile = m[1] || m[2];
+                    sourceFile = m[1];
                     sourceText = "";
+                    sourceUrl = m[2];
                     continue;
                 }
                 if (!sourceFile) {
                     sourceFile = "Main.qml";
                 }
-                sourceText += line + "\n";
+                if (!sourceUrl) {
+                    sourceText += line + "\n";
+                }
             }
-            FileSystem.tempFolder.writeTextFile(sourceFile, sourceText);
+            downloads.push(saveFile(sourceFile, sourceText, sourceUrl));
             if (!mainFile) {
                 mainFile = sourceFile;
                 mainText = sourceText;
             }
-            runView.compile(mainText || sourceText, FileSystem.tempFolder.fileUrl(mainFile));
+            Promise.all(downloads)
+            .then( function () {
+                runView.compile(mainText || sourceText, FileSystem.tempFolder.fileUrl(mainFile));
+            } );
         } catch (err) {
             console.error(err.message);
             errorString = err.message;
         }
+    }
+
+    function saveFile(sourceFile, sourceText, sourceUrl) {
+        if (!sourceUrl) {
+            FileSystem.tempFolder.writeTextFile(sourceFile, sourceText);
+            return Promise.resolve();
+        }
+        return new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequesx();
+            xhr.open('GET', sourceUrl);
+            xhr.responseType = "arraybuffer";
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+                const status = xhr.status;
+                if (status !== 0 && (status < 200 && status >= 400)) {
+                    console.log("HTTP Status ", status);
+                    reject();
+                    return;
+                }
+                FileSystem.tempFolder.writeFile(sourceFile, xhr.response);
+                resolve();
+            };
+            xhr.send();
+        } );
     }
 
     function indentCode() {
