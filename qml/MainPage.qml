@@ -115,7 +115,7 @@ Page {
             let sourceFile = mainFile;
             let sourceText = "";
             let sourceUrl = "";
-            let downloads = [ Promise.resolve ];
+            let downloads = [ ];
             for (let line of codeEdit.text.split(/\r?\n/)) {
                 let rx = /^\/\/\s*(qmldir|[\w_.-]+\.\w{3,6})(?:\s*:\s*(\w+:\/\/[^\s]*))?\s*$/;
                 let m = line.match(rx);
@@ -145,8 +145,13 @@ Page {
                 mainText = sourceText;
             }
             Promise.all(downloads)
-            .then( function () {
-                runView.compile(mainText || sourceText, FileSystem.tempFolder.fileUrl(mainFile));
+            .then( function (res) {
+                try {
+                    runView.compile(mainText || sourceText, FileSystem.tempFolder.fileUrl(mainFile));
+                } catch (err2) {
+                    console.error(err2.message);
+                    errorString = err2.message;
+                }
             } );
         } catch (err) {
             console.error(err.message);
@@ -160,21 +165,27 @@ Page {
             return Promise.resolve();
         }
         return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequesx();
-            xhr.open('GET', sourceUrl);
-            xhr.responseType = "arraybuffer";
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState !== XMLHttpRequest.DONE) return;
-                const status = xhr.status;
-                if (status !== 0 && (status < 200 && status >= 400)) {
-                    console.log("HTTP Status ", status);
-                    reject();
-                    return;
-                }
-                FileSystem.tempFolder.writeFile(sourceFile, xhr.response);
-                resolve();
-            };
-            xhr.send();
+            try {
+                console.log("Downloading", sourceFile, "from", sourceUrl);
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', sourceUrl);
+                xhr.responseType = "arraybuffer";
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState !== XMLHttpRequest.DONE) return;
+                    const status = xhr.status;
+                    console.log("Downloading", sourceFile, "HTTP Status", status);
+                    if (status !== 0 && (status < 200 && status >= 400)) {
+                        reject(new Error("HTTP Status " + status));
+                        return;
+                    }
+                    FileSystem.tempFolder.writeFile(sourceFile, xhr.response);
+                    console.log("Downloading", sourceFile, xhr.response.byteLength, "bytes");
+                    resolve();
+                };
+                xhr.send();
+            } catch (err) {
+                reject(err);
+            }
         } );
     }
 
