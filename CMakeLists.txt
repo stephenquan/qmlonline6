@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick Core5Compat)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick Core5Compat Gui Widgets 3DCore 3DExtras 3DRender 3DInput Qt63D)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick)
 
 set(PROJECT_SOURCES
@@ -73,8 +73,10 @@ target_compile_definitions(qmlonline6 PRIVATE GIT_COMMIT=${GIT_COMMIT})
 #
 # set(QML_IMPORT_PATH "./")
 
-target_link_libraries(qmlonline6
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+target_link_libraries(qmlonline6 PRIVATE
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Quick
+    )
 #  Qt${QT_VERSION_MAJOR}::Core5Compat)
 
 set_target_properties(qmlonline6 PROPERTIES
