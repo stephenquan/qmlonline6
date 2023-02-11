@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
                           + QString(".") + QString::number(QT_VERSION_PATCH);
 
     qputenv("QT_FILE_SELECTORS",newSelectors.toUtf8());
+    qputenv("QML_XHR_ALLOW_FILE_READ", QString("1").toUtf8());
 
     qmlRegisterSingletonType<App>("qmlonline", 1, 0, "App", [](QQmlEngine*,QJSEngine*) -> QObject* { return new App(); } );
     qmlRegisterSingletonType<Engine>("qmlonline", 1, 0, "Engine", [](QQmlEngine*,QJSEngine*) -> QObject* { return new Engine(); } );
