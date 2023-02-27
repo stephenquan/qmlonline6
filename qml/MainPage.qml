@@ -117,7 +117,7 @@ Page {
             let sourceUrl = "";
             let downloads = [ ];
             for (let line of codeEdit.text.split(/\r?\n/)) {
-                let rx = /^\/\/\s*(qmldir|[\w_.-]+\.\w{3,6})(?:\s*:\s*(\w+:\/\/[^\s]*))?\s*$/;
+                let rx = /^\/\/\s*([\w_\/]*qmldir|[\w_\/]*[\w_.-]+\.\w{3,6})(?:\s*:\s*(\w+:\/\/[^\s]*))?\s*$/;
                 let m = line.match(rx);
                 if (m) {
                     if (sourceFile) {
@@ -160,8 +160,14 @@ Page {
     }
 
     function saveFile(sourceFile, sourceText, sourceUrl) {
+        console.log("saveFile", sourceFile);
+        let destDir = FileSystem.tempFolder;
+        let m = sourceFile.match(/(.+)\/(.+)/);
+        if (m) {
+            destDir.folder(m[1]).mkpath();
+        }
         if (!sourceUrl) {
-            FileSystem.tempFolder.writeTextFile(sourceFile, sourceText);
+            destDir.writeTextFile(sourceFile, sourceText);
             return Promise.resolve();
         }
         return new Promise(function (resolve, reject) {
@@ -178,7 +184,7 @@ Page {
                         reject(new Error("HTTP Status " + status));
                         return;
                     }
-                    FileSystem.tempFolder.writeFile(sourceFile, xhr.response);
+                    destDir.writeFile(sourceFile, xhr.response);
                     console.log("Downloading", sourceFile, xhr.response.byteLength, "bytes");
                     resolve();
                 };
@@ -264,7 +270,21 @@ Page {
             Model {
                 source: "#Cube"
                 materials: [
-                    DefaultMaterial { diffuseColor: Qt.rgba(0.053, 0.130, 0.219, 0.75) }
+                    DefaultMaterial {
+                        diffuseMap: Texture {
+                            sourceItem: Rectangle {
+                                width: 256
+                                height: 256
+                                color: "#78a"
+                                Image {
+                                    anchors.centerIn: parent
+                                    width: 224
+                                    height: 224
+                                    source: "https://stephenquan.github.io/images/qt/madewithqt.png"
+                                }
+                            }
+                        }
+                    }
                 ]
             }
         }
