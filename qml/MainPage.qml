@@ -64,20 +64,6 @@ Page {
         }
     }
 
-    footer: Frame {
-        background: Rectangle { color: "#eee" }
-
-        RowLayout {
-            width: parent.width
-
-            Text {
-                Layout.alignment: Qt.AlignHCenter
-                text: qsTr("Built on %1 %2").arg(BUILD_DATE).arg(BUILD_TIME)
-                font.pointSize: 10
-            }
-        }
-    }
-
     Menu {
         id: menu
         x: parent.width - width
