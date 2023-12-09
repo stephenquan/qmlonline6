@@ -1,4 +1,9 @@
 #!/bin/bash -xe
 
-python3 ~/Documents/qtwasm640/qtbase/util/wasm/qtwasmserver/qtwasmserver.py  --all
+QTVER=6.4.3
+QTWASM=~/Documents/qtwasm-${QTVER}
+QMLONLINE=/tmp/qmlonline6
+
+cd ${QMLONLINE}
+python3 ${QTWASM}/qtbase/util/wasm/qtwasmserver/qtwasmserver.py  --all
 

@@ -2,7 +2,10 @@
 
 # pushd ~/emsdk
 # ./emsdk activate 3.1.14
-QTVER=6.4.1
+QTVER=6.4.3
+QTWASM=~/Documents/qtwasm-${QTVER}
+QMLONLINE=/tmp/qmlonline6
+SRCDIR=~/Documents/Qt/qmlonline/qmlonline6
 
 source ~/emsdk/emsdk_env.sh
 
@@ -22,8 +25,8 @@ rm -rf qtlogo.svg
 export GIT_COMMIT=$(git log -1 --format=%h)
 echo "GIT_COMMIT=${GIT_COMMIT}"
 
-mkdir -p out
-cd out
-~/Documents/qtwasm-${QTVER}/qtbase/bin/qt-cmake ..
+mkdir -p ${QMLONLINE}
+cd ${QMLONLINE}
+${QTWASM}/qtbase/bin/qt-cmake ${SRCDIR}
 cmake --build .
 

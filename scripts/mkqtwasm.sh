@@ -1,35 +1,40 @@
 #!/bin/bash -xe
 
-QTVER=6.4.1
+QTVER=6.4.3
+EMVER=3.1.14
+QT_HOST_PATH=~/Qt${QTVER}/${QTVER}/gcc_64
+QTWASM=~/Documents/qtwasm-${QTVER}
+
+export PATH=${PATH}:${QT_HOST_PATH}
+
 TAR=~/Downloads/qt-everywhere-src-${QTVER}.tar
-WORKDIR=~/Documents/qtwasm-${QTVER}
 
 cd ~/emsdk
-./emsdk activate 3.1.14
+./emsdk activate ${EMVER}
 source emsdk_env.sh
 
-clean_workdir() {
-  if [ -d "${WORKDIR}" ]; then
-    rm -rf "${WORKDIR}"
+clean_qtwasm() {
+  if [ -d "${QTWASM}" ]; then
+    rm -rf "${QTWASM}"
   fi
 }
 
 unpack_tarball() {
-  if [ -d "${WORKDIR}" ]; then
+  if [ -d "${QTWASM}" ]; then
     return
   fi
-  if [ ! -d "${WORKDIR}" ]; then
-    mkdir -p "${WORKDIR}"
+  if [ ! -d "${QTWASM}" ]; then
+    mkdir -p "${QTWASM}"
   fi
-  tar -C "${WORKDIR}" -xf "${TAR}" --strip-components=1
-  rm -rf "${WORKDIR}/qtwebengine"
+  tar -C "${QTWASM}" -xf "${TAR}" --strip-components=1
+  rm -rf "${QTWASM}/qtwebengine"
 }
 
 configure_qtkit() {
-  cd "${WORKDIR}"
+  cd "${QTWASM}"
   cmd=()
   cmd+=( ./configure )
-  cmd+=( -qt-host-path ~/Qt${QTVER}/${QTVER}/gcc_64)
+  cmd+=( -qt-host-path ${QT_HOST_PATH} )
   cmd+=( -platform     wasm-emscripten )
   cmd+=( -nomake       examples )
   cmd+=( -prefix       $PWD/qtbase  )
@@ -37,7 +42,7 @@ configure_qtkit() {
 }
 
 build_qtkit() {
-  cd "${WORKDIR}"
+  cd "${QTWASM}"
 
   cmd=()
   cmd+=( cmake )
@@ -100,8 +105,8 @@ build_qtkit() {
 echo 1000 tests
 which cmake
 cmake --version
-echo 1001 clean_workdir
-clean_workdir
+echo 1001 clean_qtwasm
+clean_qtwasm
 echo 1002 unpack_tarball
 unpack_tarball
 echo 1003 configure_qtkit
@@ -109,7 +114,7 @@ configure_qtkit
 echo 1004 build_qtkit
 build_qtkit
 
-cd "${WORKDIR}"
+cd "${QTWASM}"
 pwd
 ls
 
