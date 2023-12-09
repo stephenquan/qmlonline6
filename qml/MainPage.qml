@@ -26,7 +26,7 @@ Page {
             width: parent.width
             Text {
                 Layout.fillWidth: true
-                text: app.title
+                text: runView.title ?? app.title
                 color: "snow"
             }
             AppIconButton {
@@ -60,6 +60,7 @@ Page {
         }
         RunView {
             id: runView
+            property string title: (children && children.length > 0) ? children[0].title : ""
         }
     }
 
@@ -262,6 +263,7 @@ import QtQuick.Layouts
 import QtQuick3D
 Page {
     background: Rectangle { color: "#848895" }
+    title: "Qt6 QML Online6"
     Node {
         id: standAloneScene
         DirectionalLight { ambientColor: Qt.rgba(1.0, 1.0, 1.0, 1.0) }
