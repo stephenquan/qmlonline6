@@ -161,13 +161,13 @@ Page {
                 } catch (err2) {
                     console.error(err2.message);
                     errorString = err2.message;
-                    play = false;
+                    play = hotreload;
                 }
             } );
         } catch (err) {
             console.error(err.message);
             errorString = err.message;
-            play = false;
+            play = hotreload;
         }
     }
 
