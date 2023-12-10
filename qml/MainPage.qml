@@ -16,6 +16,8 @@ import qmlonline 1.0
 
 Page {
     property string errorString: ""
+    property bool editor: true
+    property bool autoplay: true
 
     header: Frame {
         background: Rectangle {
@@ -26,8 +28,22 @@ Page {
             width: parent.width
             Text {
                 Layout.fillWidth: true
-                text: runView.title ?? app.title
+                text: (autoplay && runView.title) || app.title
                 color: "snow"
+            }
+            AppIconButton {
+                icon.source: "images/qt-code-32.svg"
+                onClicked: actionToggleEditor()
+            }
+            AppIconButton {
+                icon.source: "images/play-32-f.svg"
+                visible: !autoplay
+                onClicked: actionPlay()
+            }
+            AppIconButton {
+                icon.source: "images/stop-square-32-f.svg"
+                visible: autoplay
+                onClicked: actionStop()
             }
             AppIconButton {
                 icon.source: "images/handle-vertical-32.svg"
@@ -39,6 +55,7 @@ Page {
     SplitView {
         anchors.fill: parent
         SplitView {
+            visible: editor
             orientation: Qt.Vertical
             SplitView.preferredWidth: parent.width/3
             CodeEdit {
@@ -60,7 +77,8 @@ Page {
         }
         RunView {
             id: runView
-            property string title: (children && children.length > 0) ? children[0].title : ""
+            visible: autoplay
+            property string title: (children.length > 0) ? children[0].title : ""
         }
     }
 
@@ -93,6 +111,9 @@ Page {
     }
 
     function compile() {
+        if (!autoplay) {
+            return;
+        }
         try {
             errorString = "";
             Engine.clearComponentCache();
@@ -218,6 +239,8 @@ Page {
             lines.push(str);
             indent += postindent;
         }
+        while (lines.length > 0 && lines[lines.length-1] === "")
+            lines.pop();
         codeEdit.text = lines.join('\n') + '\n';
     }
 
@@ -249,7 +272,7 @@ import QtQuick.Layouts
 import QtQuick3D
 Page {
     background: Rectangle { color: "#848895" }
-    title: "Qt6 QML Online6"
+    title: "Qt6 QML Online"
     Node {
         id: standAloneScene
         DirectionalLight { ambientColor: Qt.rgba(1.0, 1.0, 1.0, 1.0) }
@@ -299,5 +322,19 @@ Page {
 `;
         }
         codeEdit.text = code;
+    }
+
+    function actionToggleEditor() {
+        editor = !editor;
+    }
+
+    function actionPlay() {
+        autoplay = true;
+        Qt.callLater(compile);
+    }
+
+    function actionStop() {
+        autoplay = false;
+        runView.stop();
     }
 }
