@@ -3,6 +3,8 @@
         <file>qml/AboutPage.qml</file>
         <file>qml/AppIconButton.qml</file>
         <file>qml/images/chevron-left-32.svg</file>
+        <file>qml/images/clock-forward-32.svg</file>
+        <file>qml/images/forward-32-f.svg</file>
         <file>qml/images/handle-vertical-32.svg</file>
         <file>qml/images/information-32.svg</file>
         <file>qml/images/play-32-f.svg</file>

@@ -16,8 +16,8 @@ import qmlonline 1.0
 
 Page {
     property string errorString: ""
-    property bool editor: true
-    property bool autoplay: true
+    property bool play: true
+    property bool hotreload: false
 
     header: Frame {
         background: Rectangle {
@@ -28,21 +28,22 @@ Page {
             width: parent.width
             Text {
                 Layout.fillWidth: true
-                text: (autoplay && runView.title) || app.title
+                text: (play && runView.title) || app.title
                 color: "snow"
             }
             AppIconButton {
-                icon.source: "images/qt-code-32.svg"
-                onClicked: actionToggleEditor()
+                icon.source: "images/forward-32-f.svg"
+                visible: !play && !hotreload
+                onClicked: actionReload()
             }
             AppIconButton {
                 icon.source: "images/play-32-f.svg"
-                visible: !autoplay
+                visible: !play && !hotreload
                 onClicked: actionPlay()
             }
             AppIconButton {
                 icon.source: "images/stop-square-32-f.svg"
-                visible: autoplay
+                visible: play
                 onClicked: actionStop()
             }
             AppIconButton {
@@ -55,7 +56,7 @@ Page {
     SplitView {
         anchors.fill: parent
         SplitView {
-            visible: editor
+            visible: !play || hotreload
             orientation: Qt.Vertical
             SplitView.preferredWidth: parent.width/3
             CodeEdit {
@@ -67,6 +68,7 @@ Page {
                 onTextChanged: Qt.callLater(compile);
             }
             Frame {
+                visible: errorString
                 Text {
                     anchors.fill: parent
                     text: errorString
@@ -77,7 +79,7 @@ Page {
         }
         RunView {
             id: runView
-            visible: autoplay
+            visible: play
             property string title: (children.length > 0) ? children[0].title : ""
         }
     }
@@ -111,7 +113,7 @@ Page {
     }
 
     function compile() {
-        if (!autoplay) {
+        if (!play) {
             return;
         }
         try {
@@ -159,11 +161,13 @@ Page {
                 } catch (err2) {
                     console.error(err2.message);
                     errorString = err2.message;
+                    play = false;
                 }
             } );
         } catch (err) {
             console.error(err.message);
             errorString = err.message;
+            play = false;
         }
     }
 
@@ -324,17 +328,24 @@ Page {
         codeEdit.text = code;
     }
 
-    function actionToggleEditor() {
-        editor = !editor;
+    function actionReload() {
+        hotreload = !hotreload;
+        if (hotreload) {
+            play = true;
+            Qt.callLater(compile);
+        }
     }
 
     function actionPlay() {
-        autoplay = true;
+        play = true;
         Qt.callLater(compile);
     }
 
     function actionStop() {
-        autoplay = false;
+        if (hotreload) {
+            hotreload = false;
+        }
+        play = false;
         runView.stop();
     }
 }
