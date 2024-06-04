@@ -52,7 +52,6 @@ build_qtkit() {
   cmd+=( -t qtimageformats )
   cmd+=( -t qtsvg )
   # cmd+=( -t qtquickcontrols2 )
-  cmd+=( -t qtnetworkauth )
   cmd+=( -t qt3d )
   cmd+=( -t qtquick3d )
   cmd+=( -t qtmultimedia )

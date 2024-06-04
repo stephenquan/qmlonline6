@@ -6,12 +6,14 @@
 #include <QQmlContext>
 #include <QDebug>
 #include "../qt-toolkit/App.h"
+#include "../qt-toolkit/CustomSyntaxHighlighter.h"
 #include "../qt-toolkit/Engine.h"
 #include "../qt-toolkit/FileSystem.h"
 #include "../qt-toolkit/Folder.h"
 #include "../qt-toolkit/ImageBuffer.h"
 #include "../qt-toolkit/SyntaxHighlighter.h"
 #include "../qt-toolkit/System.h"
+#include "../qt-toolkit/TextCharFormat.h"
 #include "../qt-toolkit/UrlInfo.h"
 
 #define STR_HELPER(x) #x
@@ -30,6 +32,7 @@ int main(int argc, char *argv[])
     qputenv("QML_XHR_ALLOW_FILE_READ", QString("1").toUtf8());
 
     qmlRegisterSingletonType<App>("qmlonline", 1, 0, "App", [](QQmlEngine*,QJSEngine*) -> QObject* { return new App(); } );
+    qmlRegisterType<CustomSyntaxHighlighter>("qmlonline", 1, 0, "CustomSyntaxHighlighter");
     qmlRegisterSingletonType<Engine>("qmlonline", 1, 0, "Engine", [](QQmlEngine*,QJSEngine*) -> QObject* { return new Engine(); } );
     qmlRegisterSingletonType<FileSystem>("qmlonline", 1, 0, "FileSystem", [](QQmlEngine*,QJSEngine*) -> QObject* { return new FileSystem(); } );
     qmlRegisterSingletonType<System>("qmlonline", 1, 0, "System", [](QQmlEngine*,QJSEngine*) -> QObject* { return new System(); } );
@@ -37,6 +40,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ImageBuffer>("qmlonline", 1, 0, "ImageBuffer");
     qmlRegisterType<Folder>("qmlonline", 1, 0, "Folder");
     qmlRegisterType<SyntaxHighlighter>("qmlonline", 1, 0, "SyntaxHighlighter");
+    qmlRegisterType<TextCharFormat>("qmlonline", 1, 0, "TextCharFormat");
     qmlRegisterType<UrlInfo>("qmlonline", 1, 0, "UrlInfo");
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

@@ -18,6 +18,8 @@ set(PROJECT_SOURCES
     src/main.cpp
     qt-toolkit/App.cpp
     qt-toolkit/App.h
+    qt-toolkit/CustomSyntaxHighlighter.cpp
+    qt-toolkit/CustomSyntaxHighlighter.h
     qt-toolkit/Engine.cpp
     qt-toolkit/Engine.h
     qt-toolkit/FileSystem.cpp
@@ -30,6 +32,8 @@ set(PROJECT_SOURCES
     qt-toolkit/SyntaxHighlighter.h
     qt-toolkit/System.cpp
     qt-toolkit/System.h
+    qt-toolkit/TextCharFormat.cpp
+    qt-toolkit/TextCharFormat.h
     qt-toolkit/UrlInfo.cpp
     qt-toolkit/UrlInfo.h
     qml.qrc
